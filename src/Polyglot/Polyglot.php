@@ -174,12 +174,14 @@ abstract class Polyglot extends Model
 		// If the model supports the locale, load and return it
 		if (in_array($key, $this->getLocales())) {
 			$relation = $this->hasOne($this->getLangClass())->whereLang($key);
+			$results = $relation->getResults();
 
-			if ($relation->getResults() === null) {
+			if ($results === null) {
 				$relation = $this->hasOne($this->getLangClass())->whereLang(Config::get('polyglot::fallback'));
+				$results = $relation->getResults();
 			}
 
-			return $this->relations[$key] = $relation->getResults();
+			return $this->relations[$key] = $results;
 		}
 
 		// If the attribute is set to be automatically localized
